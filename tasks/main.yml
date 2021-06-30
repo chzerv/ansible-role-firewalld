@@ -1,0 +1,51 @@
+---
+- name: Populate package facts so we can detect if other firewalls are present.
+  package_facts:
+    manager: auto
+
+- name: Populate service facts so we can detect if other firewalls are running.
+  service_facts:
+
+- name: Ensure the ufw service is stopped and disabled.
+  service:
+    name: ufw
+    state: stopped
+    enabled: false
+  when:
+    - "'ufw' in ansible_facts.packages"
+    - "'ufw' in ansible_facts.services"
+
+- name: Ensure the ufw package is uninstalled.
+  package:
+    name: ufw
+    state: absent
+  when: "'ufw' in ansible_facts.packages"
+
+- name: Ensure the iptables services is stopped and disabled.
+  service:
+    name: iptables
+    state: stopped
+    enabled: false
+  when:
+    - "'iptables' in ansible_facts.packages"
+    - "'iptables' in ansible_facts.services"
+
+- name: Ensure required packages are installed.
+  package:
+    name: "{{ firewalld_packages }}"
+    state: present
+  when: ansible_distribution != "Debian"
+
+- name: Ensure required packages are installed in Debian systems.
+  apt:
+    name: "{{ firewalld_packages }}"
+    state: present
+    default_release: buster-backports
+    update_cache: true
+  when: ansible_distribution == "Debian"
+
+- name: Ensure the firewalld service is started and enabled at boot.
+  service:
+    name: firewalld
+    state: "{{ firewalld_state | default('started') }}"
+    enabled: "{{ firewalld_enabled_at_boot | default('true') }}"
