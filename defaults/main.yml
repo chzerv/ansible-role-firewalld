@@ -1,0 +1,5 @@
+---
+# In case you are using a custom SSH port, make sure to set the following variable.
+# This way, the SSH port will be added to firewalld before the service is enabled,
+# making sure you won't get locked out of the system.
+firewalld_ssh_port: []

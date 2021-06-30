@@ -44,6 +44,14 @@
     update_cache: true
   when: ansible_distribution == "Debian"
 
+- name: Make sure to add the custom SSH port, if one is defined, before anything else.
+  firewalld:
+    port: "{{ firewalld_ssh_port }}/tcp"
+    zone: public
+    permanent: true
+    state: enabled
+  when: firewalld_ssh_port | length > 0
+
 - name: Ensure the firewalld service is started and enabled at boot.
   service:
     name: firewalld
