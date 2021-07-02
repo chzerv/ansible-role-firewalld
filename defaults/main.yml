@@ -3,3 +3,28 @@
 # This way, the SSH port will be added to firewalld before the service is enabled,
 # making sure you won't get locked out of the system.
 firewalld_ssh_port: []
+
+# List the ports you want to add/remove from/to a zone, following the syntax shown below.
+firewalld_zone_ports:
+# firewalld_zone_ports:
+#   - zone: public
+#     port:
+#       - 8080/tcp
+#       - 3600/udp
+#     state: enabled # Or disabled, if you want to remove the port
+
+# List the services you want to add/remove from/to a zone, following the syntax shown below.
+firewalld_zone_services:
+# firewalld_zone_services:
+#   - zone: public
+#     service:
+#       - dhcpv6-client
+#       - ssh
+#     state: enabled # Or disabled, if you want to remove the service
+
+# Add/remove a new port from/to a service.
+firewalld_service_ports:
+# firewalld_service_ports:
+#   - service: ssh
+#     port: 4005/tcp
+#     state: enabled # Or disabled, if you want to remove the port from the service.

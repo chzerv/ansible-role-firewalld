@@ -57,3 +57,6 @@
     name: firewalld
     state: "{{ firewalld_state | default('started') }}"
     enabled: "{{ firewalld_enabled_at_boot | default('true') }}"
+
+- name: Include tasks about port and service management.
+  include_tasks: service_port_management.yml

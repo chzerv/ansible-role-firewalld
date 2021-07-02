@@ -1,0 +1,55 @@
+---
+- name: Get firewalld built-in services.
+  command: "firewall-cmd --get-services"
+  register: firewalld_built_in_services
+  changed_when: false
+
+- name: Add/remove port to/from zone.
+  firewalld:
+    zone: "{{ item.0.zone }}"
+    port: "{{ item.1 }}"
+    permanent: true
+    immediate: true
+    state: "{{ item.0.state }}"
+  loop: "{{ firewalld_zone_ports | subelements('port') }}"
+  loop_control:
+    label: "Port {{ item.1 }} {{ 'added to' if item.0.state == 'enabled' else 'removed from' }} zone {{ item.0.zone }}"
+
+- name: Add/remove service to/from zone.
+  firewalld:
+    zone: "{{ item.0.zone }}"
+    service: "{{ item.1 }}"
+    permanent: true
+    immediate: true
+    state: "{{ item.0.state }}"
+  loop: "{{ firewalld_zone_services | subelements('service') }}"
+  loop_control:
+    label: "Service {{ item.1 }} {{ 'added to' if item.0.state == 'enabled' else 'removed from' }} zone {{ item.0.zone }}"
+
+# Unfortunately the firewalld module can only operate on either a service, zone,
+# port, icmp_block, rich rule, masquerade, icmp_block_conversion, interface or
+# source at once. That means that, in order to add a port to a service, we have
+# to use the `command` module.
+#
+# To add some idempotence, We query the port. If the port exists, the
+# query will return "yes", otherwise, "no". Then, we use that output to
+# decide when the item has changed.
+- name: Check if port already exists for service.
+  command: "firewall-cmd --service={{ item.service }} --query-port={{ item.port }} --permanent"
+  register: service_port_exists
+  changed_when: false
+  failed_when: false
+  loop: "{{ firewalld_service_ports | flatten(levels=1) | default({}) }}"
+  loop_control:
+    label: "{{ item.service }} - port exists: {{ 'True' if not service_port_exists.rc | default('False') | bool else 'False' }}"
+  when: item.port is defined
+
+- name: Add/remove port to/from service.
+  command: "firewall-cmd --service={{ item.item.service }} {{ '--add-port' if item.item.state == 'enabled' else '--remove-port' }}='{{ item.item.port }}' --permanent"
+  changed_when: >
+    (item.stdout == "no" if item.item.state == "enabled") or
+    (item.stdout == "yes" if item.item.state == "disabled")
+  loop: "{{ service_port_exists.results | flatten(levels=1) }}"
+  loop_control:
+    label: "Port {{ item.item.port }} {{ 'added to' if item.item.state == 'enabled' else 'removed from'}} service {{ item.item.service }}"
+  when: item.item.port is defined
