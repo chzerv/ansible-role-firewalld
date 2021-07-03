@@ -36,14 +36,6 @@
     state: present
   when: ansible_distribution != "Debian"
 
-- name: Ensure required packages are installed in Debian systems.
-  apt:
-    name: "{{ firewalld_packages }}"
-    state: present
-    default_release: buster-backports
-    update_cache: true
-  when: ansible_distribution == "Debian"
-
 - name: Make sure to add the custom SSH port, if one is defined, before anything else.
   firewalld:
     port: "{{ firewalld_ssh_port }}/tcp"
