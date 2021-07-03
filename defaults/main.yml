@@ -8,7 +8,7 @@ firewalld_ssh_port: []
 firewalld_default_zone: public
 
 # List of additional zones to be created.
-firewalld_add_new_zone:
+firewalld_add_new_zone: []
 # firewalld_add_new_zone: bar
 # Or, to add multiple new zones:
 # firewalld_add_new_zone:
@@ -16,7 +16,7 @@ firewalld_add_new_zone:
 #   - foobar
 
 # List the ports you want to add/remove from/to a zone, following the syntax shown below.
-firewalld_zone_ports:
+firewalld_zone_ports: []
 # firewalld_zone_ports:
 #   - zone: public
 #     port:
@@ -25,7 +25,7 @@ firewalld_zone_ports:
 #     state: enabled # Or disabled, if you want to remove the port
 
 # List the services you want to add/remove from/to a zone, following the syntax shown below.
-firewalld_zone_services:
+firewalld_zone_services: []
 # firewalld_zone_services:
 #   - zone: public
 #     service:
@@ -33,7 +33,7 @@ firewalld_zone_services:
 #       - ssh
 #     state: enabled # Or disabled, if you want to remove the service
 
-# List of zones to enabled masquarade in.
+# List of zones to enable masquarade in.
 firewalld_zone_masquerading: []
 # firewalld_manage_masquerading:
 #   - zone: dmz
@@ -42,6 +42,7 @@ firewalld_zone_masquerading: []
 #     immediate: true  # Optional, defaults to false
 #     state: enabled   # Or disabled, if you want to disable masquarade.
 
+# Change a zone's default target.
 firewalld_zone_target: []
 # firewalld_zone_target:
 #   - zone: internal
@@ -50,6 +51,8 @@ firewalld_zone_target: []
 #     permanent: true # Optional, defaults to true
 #     immediate: true # Optional, defaults to false
 
+
+# Interfaces to add/remove to/from a zone.
 firewalld_zone_interfaces: []
 # firewalld_zone_interfaces:
 #   - zone: public
@@ -59,6 +62,7 @@ firewalld_zone_interfaces: []
 #     immediate: true # Optional, defaults to false
 #     state: enabled
 
+# Sources to add/remove to/from a zone.
 firewalld_zone_sources: []
 # firewalld_zone_sources:
 #   - zone: public
@@ -69,7 +73,7 @@ firewalld_zone_sources: []
 #     state: enabled
 
 # Add/remove a new port from/to a service.
-firewalld_service_ports:
+firewalld_service_ports: []
 # firewalld_service_ports:
 #   - service: ssh
 #     port: 4005/tcp
