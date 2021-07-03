@@ -63,3 +63,6 @@
 
 - name: Include tasks about port and service management.
   include_tasks: service_port_management.yml
+
+- name: Include tasks about rich rules.
+  include_tasks: rich_rules.yml

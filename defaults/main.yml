@@ -74,3 +74,15 @@ firewalld_service_ports:
 #   - service: ssh
 #     port: 4005/tcp
 #     state: enabled # Or disabled, if you want to remove the port from the service.
+
+# List the rich rules to be added/removed to a zone, following the syntax below.
+firewalld_rich_rules: []
+# firewalld_rich_rules:
+#   - zone: public
+#     rule:
+#       - "rule priority=1 family=ipv4 source address=192.168.1.1/24 service name=ssh log prefix=emerg level=alert drop"
+#       - "rule priority=32767 log prefix=UNEXPECTED limit value=5/m"
+#     permanent: true # Optional, defaults to true
+#     immediate: true # Optional, defaults to false
+#     state: enabled # Or disabled, if you want to remove the rule(s).
+
