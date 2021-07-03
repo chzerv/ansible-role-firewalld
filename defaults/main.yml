@@ -4,6 +4,17 @@
 # making sure you won't get locked out of the system.
 firewalld_ssh_port: []
 
+# The zone to be used as the default one. Defaults to "public".
+firewalld_default_zone: public
+
+# List of additional zones to be created.
+firewalld_add_new_zone:
+# firewalld_add_new_zone: bar
+# Or, to add multiple new zones:
+# firewalld_add_new_zone:
+#   - foo
+#   - foobar
+
 # List the ports you want to add/remove from/to a zone, following the syntax shown below.
 firewalld_zone_ports:
 # firewalld_zone_ports:
@@ -21,6 +32,41 @@ firewalld_zone_services:
 #       - dhcpv6-client
 #       - ssh
 #     state: enabled # Or disabled, if you want to remove the service
+
+# List of zones to enabled masquarade in.
+firewalld_zone_masquerading: []
+# firewalld_manage_masquerading:
+#   - zone: dmz
+#     masquerade: true # Optional, defaults to true
+#     permanent: true  # Optional, defaults to true
+#     immediate: true  # Optional, defaults to false
+#     state: enabled   # Or disabled, if you want to disable masquarade.
+
+firewalld_zone_target: []
+# firewalld_zone_target:
+#   - zone: internal
+#     state: present  # Or absent, if you want to reset the zone's target to its default.
+#     target: ACCEPT
+#     permanent: true # Optional, defaults to true
+#     immediate: true # Optional, defaults to false
+
+firewalld_zone_interfaces: []
+# firewalld_zone_interfaces:
+#   - zone: public
+#     interface:
+#       - eth0
+#     permanent: true # Optional, defaults to true
+#     immediate: true # Optional, defaults to false
+#     state: enabled
+
+firewalld_zone_sources: []
+# firewalld_zone_sources:
+#   - zone: public
+#     source:
+#       - 192.168.22.60/24
+#     permanent: true # Optional, defaults to true
+#     immediate: true # Optional, defaults to false
+#     state: enabled
 
 # Add/remove a new port from/to a service.
 firewalld_service_ports:

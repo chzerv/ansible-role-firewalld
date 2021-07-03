@@ -1,0 +1,63 @@
+---
+- name: Get firewalld default zone.
+  command: "firewall-cmd --get-default-zone"
+  register: default_zone
+  changed_when: false
+
+- name: Add new zone(s).
+  firewalld:
+    zone: "{{ item }}"
+    state: present
+    permanent: true
+  loop: "{{ firewalld_add_new_zone | flatten(levels=1) }}"
+
+- name: Force handlers to run immediately.
+  meta: flush_handlers
+
+- name: Set firewalld default zone.
+  command: "firewall-cmd --set-default-zone={{ firewalld_default_zone | default('public') }}"
+  register: zone_change_result
+  changed_when: zone_change_result == "success"
+  when: default_zone.stdout != firewalld_default_zone
+
+- name: Enable/disable masquarading in a zone.
+  firewalld:
+    zone: "{{ item.zone }}"
+    masquerade: "{{ item.masquerade | default('true') }}"
+    state: "{{ item.state }}"
+    permanent: "{{ item.permanent | default('true') }}"
+    immediate: "{{ item.immediate | default('false') }}"
+  loop: "{{ firewalld_zone_masquerading | flatten(levels=1) }}"
+  loop_control:
+    label: "Masquerading {{ 'enabled' if item.state == 'enabled' else 'disabled' }} for zone {{ item.zone }}"
+
+- name: Change the default target of a zone.
+  firewalld:
+    zone: "{{ item.zone }}"
+    state: "{{ item.state }}"
+    target: "{{ item.target }}"
+    permanent: "{{ item.permanent | default('true') }}"
+    immediate: "{{ item.immediate | default('false') }}"
+  loop: "{{ firewalld_zone_target | flatten(levels=1) }}"
+
+- name: Add/remove interfaces to/from a zone.
+  firewalld:
+    zone: "{{ item.0.zone }}"
+    interface: "{{ item.1 }}"
+    permanent: "{{ item.0.permanent | default('true') }}"
+    immediate: "{{ item.0.immediate | default('false') }}"
+    state: "{{ item.0.state }}"
+  when:
+    - firewalld_zone_interfaces | length > 0
+  loop: "{{ firewalld_zone_interfaces | subelements('interface') }}"
+
+- name: Add/remove sources to/from a zone.
+  firewalld:
+    zone: "{{ item.0.zone }}"
+    source: "{{ item.1 }}"
+    permanent: "{{ item.0.permanent | default('true') }}"
+    immediate: "{{ item.0.immediate | default('false') }}"
+    state: "{{ item.0.state }}"
+  when:
+    - firewalld_zone_sources | length > 0
+  loop: "{{ firewalld_zone_sources | subelements('source') }}"
