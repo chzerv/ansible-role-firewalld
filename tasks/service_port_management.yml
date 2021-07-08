@@ -24,7 +24,10 @@
     state: "{{ item.0.state }}"
   loop: "{{ firewalld_zone_services | subelements('service') }}"
   loop_control:
-    label: "Service {{ item.1 }} {{ 'added to' if item.0.state == 'enabled' else 'removed from' }} zone {{ item.0.zone }}"
+    label: >
+      "Service {{ item.1 }}
+      {{ 'added to' if item.0.state == 'enabled' else 'removed from' }}
+      zone {{ item.0.zone }}"
 
 # Unfortunately the firewalld module can only operate on either a service, zone,
 # port, icmp_block, rich rule, masquerade, icmp_block_conversion, interface or
@@ -41,7 +44,9 @@
   failed_when: false
   loop: "{{ firewalld_service_ports | flatten(levels=1) | default({}) }}"
   loop_control:
-    label: "{{ item.service }} - port exists: {{ 'True' if not service_port_exists.rc | default('False') | bool else 'False' }}"
+    label: >
+      "{{ item.service }} - port exists:
+        {{ 'True' if not service_port_exists.rc | default('False') | bool else 'False' }}"
   when: item.port is defined
 
 - name: Add/remove port to/from service.
@@ -51,5 +56,8 @@
     (item.stdout == "yes" if item.item.state == "disabled")
   loop: "{{ service_port_exists.results | flatten(levels=1) }}"
   loop_control:
-    label: "Port {{ item.item.port }} {{ 'added to' if item.item.state == 'enabled' else 'removed from'}} service {{ item.item.service }}"
+    label: >
+      "Port {{ item.item.port }}
+      {{ 'added to' if item.item.state == 'enabled' else 'removed from'}}
+      service {{ item.item.service }}"
   when: item.item.port is defined

@@ -89,4 +89,3 @@ firewalld_rich_rules: []
 #     permanent: true # Optional, defaults to true
 #     immediate: true # Optional, defaults to false
 #     state: enabled # Or disabled, if you want to remove the rule(s).
-
