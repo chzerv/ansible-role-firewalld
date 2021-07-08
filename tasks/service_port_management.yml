@@ -8,8 +8,8 @@
   firewalld:
     zone: "{{ item.0.zone }}"
     port: "{{ item.1 }}"
-    permanent: true
-    immediate: true
+    permanent: "{{ item.0.permanent | default('true') }}"
+    immediate: "{{ item.0.immediate | default('false') }}"
     state: "{{ item.0.state }}"
   loop: "{{ firewalld_zone_ports | subelements('port') }}"
   loop_control:
@@ -19,8 +19,8 @@
   firewalld:
     zone: "{{ item.0.zone }}"
     service: "{{ item.1 }}"
-    permanent: true
-    immediate: true
+    permanent: "{{ item.0.permanent | default('true') }}"
+    immediate: "{{ item.0.immediate | default('false') }}"
     state: "{{ item.0.state }}"
   loop: "{{ firewalld_zone_services | subelements('service') }}"
   loop_control:

@@ -23,6 +23,8 @@ firewalld_zone_ports: []
 #       - 8080/tcp
 #       - 3600/udp
 #     state: enabled # Or disabled, if you want to remove the port
+#     permanent: true  # Optional, defaults to true
+#     immediate: true  # Optional, defaults to false
 
 # List the services you want to add/remove from/to a zone, following the syntax shown below.
 firewalld_zone_services: []
@@ -32,6 +34,8 @@ firewalld_zone_services: []
 #       - dhcpv6-client
 #       - ssh
 #     state: enabled # Or disabled, if you want to remove the service
+#     permanent: true  # Optional, defaults to true
+#     immediate: true  # Optional, defaults to false
 
 # List of zones to enable masquarade in.
 firewalld_zone_masquerading: []
