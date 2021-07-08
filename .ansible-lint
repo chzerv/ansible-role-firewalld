@@ -1,0 +1,7 @@
+skip_list:
+  - role-name
+
+warn_list:
+  - yaml
+  - internal-error
+  - no-handler

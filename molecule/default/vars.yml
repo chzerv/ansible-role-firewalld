@@ -1,0 +1,58 @@
+---
+firewalld_ssh_port: "42749"
+
+firewalld_add_new_zone:
+  - foobar
+  - bar
+
+firewalld_default_zone: public
+
+firewalld_state: started
+
+firewalld_enabled_at_boot: true
+
+firewalld_zone_ports:
+  - zone: public
+    port:
+      - 8080/tcp
+      - 1714-1764/tcp
+      - 1714-1764/udp
+    state: enabled
+
+firewalld_zone_services:
+  - zone: public
+    service:
+      - dhcpv6-client
+    state: enabled
+  - zone: public
+    service:
+      - dhcp
+      - dns
+    state: enabled
+
+firewalld_zone_masquerading:
+  - zone: dmz
+    state: disabled
+
+firewalld_zone_target:
+  - zone: internal
+    state: present
+    target: ACCEPT
+    permanent: true
+
+firewalld_zone_interfaces:
+  - zone: public
+    interface:
+      - eth0
+    state: enabled
+
+firewalld_zone_sources:
+  - zone: public
+    source:
+      - 192.168.22.60/24
+    state: disabled
+
+firewalld_service_ports:
+  - service: ssh
+    port: 42749/tcp
+    state: enabled

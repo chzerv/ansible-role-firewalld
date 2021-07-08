@@ -1,7 +1,32 @@
 ---
 - name: Converge
   hosts: all
+
+  vars_files:
+    - ./vars.yml
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt:
+        upgrade: true
+        update_cache: true
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Update pacman cache.
+      pacman:
+        update_cache: yes
+        upgrade: yes
+      when: ansible_os_family == "Archlinux"
+
   tasks:
     - name: "Include ansible-role-firewalld"
       include_role:
         name: "ansible-role-firewalld"
+
+  post_tasks:
+    - name: Dump variables.
+      copy:
+        content: |
+          {{ vars | to_yaml }}
+        dest: /tmp/ansible_vars.yml
+      changed_when: false
