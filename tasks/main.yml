@@ -48,7 +48,7 @@
   service:
     name: firewalld
     state: "{{ firewalld_state | default('started') }}"
-    enabled: "{{ firewalld_enabled_at_boot | default('true') }}"
+    enabled: "{{ firewalld_enabled_at_boot | default('false') }}"
 
 - name: Include tasks about zone management.
   include_tasks: zone_management.yml
