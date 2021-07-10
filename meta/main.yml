@@ -19,11 +19,8 @@ galaxy_info:
         - 8
     - name: Ubuntu
       versions:
-        - bionic
-        - cosmic
-        - disco
-        - eoan
         - focal
+        - groovy
     - name: Archlinux
       versions: all
 

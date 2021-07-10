@@ -1,8 +1,6 @@
 # Ansible Role: Firewalld
 
-> **Note**: WIP, don't use!
-
-Ansible role to install and setup [firewalld](https://firewalld.org) on Ubuntu, RedHat/CentOS/Fedora and Archlinux systems.
+Ansible role to install and setup [firewalld](https://firewalld.org) on Ubuntu(>20.04), RedHat/CentOS/Fedora and Archlinux systems.
 
 > *Disclaimer*: Debian offers a very outdated version of firewalld, so it is *currently* not supported.
 
