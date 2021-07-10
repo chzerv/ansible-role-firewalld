@@ -1,0 +1,24 @@
+---
+- name: Ensure that 'immediate' is not set when adding/remove sources to a zone.
+  assert:
+    that:
+      - item.immediate is not defined
+    fail_msg: "The 'immediate' option should not be set when adding/removing sources to a zone."
+  when: firewalld_zone_sources | length > 0
+  loop: "{{ firewalld_zone_sources | flatten(levels=1) }}"
+
+- name: Ensure that 'immediate' is not set when adding/remove interfaces to a zone.
+  assert:
+    that:
+      - item.immediate is not defined
+    fail_msg: "The 'immediate' option should not be set when adding/removing interfaces to a zone."
+  when: firewalld_zone_interfaces | length > 0
+  loop: "{{ firewalld_zone_interfaces | flatten(levels=1) }}"
+
+- name: Ensure that 'immediate' is not set when changing a zone's target.
+  assert:
+    that:
+      - item.immediate is not defined
+    fail_msg: "The 'immediate' option should not be set when changing a zone's target."
+  when: firewalld_zone_target | length > 0
+  loop: "{{ firewalld_zone_target | flatten(levels=1) }}"

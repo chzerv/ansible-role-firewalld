@@ -6,6 +6,9 @@
 - name: Populate service facts so we can detect if other firewalls are running.
   service_facts:
 
+- name: Ensure that variables are correctly set.
+  include_tasks: variable_check.yml
+
 - name: Ensure the ufw service is stopped and disabled.
   service:
     name: ufw
