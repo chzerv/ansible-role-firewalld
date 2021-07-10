@@ -1,0 +1,76 @@
+---
+firewalld_ssh_port: "42749"
+
+firewalld_add_new_zone:
+  - custom1
+  - custom2
+
+firewalld_default_zone: public
+
+firewalld_state: started
+
+firewalld_enabled_at_boot: true
+
+firewalld_zone_ports:
+  - zone: public
+    port:
+      - 8080/tcp
+      - 1714-1764/tcp
+      - 1714-1764/udp
+    permanent: true
+    immediate: true
+    state: enabled
+
+firewalld_zone_services:
+  - zone: public
+    service:
+      - dhcpv6-client
+    state: disabled
+  - zone: public
+    service:
+      - dhcp
+      - dns
+    permanent: true
+    immediate: true
+    state: enabled
+
+firewalld_zone_masquerading:
+  - zone: dmz
+    permanent: true
+    immediate: true
+    state: disabled
+
+firewalld_zone_target:
+  - zone: internal
+    state: present
+    target: ACCEPT
+    permanent: true
+
+firewalld_zone_interfaces:
+  - zone: public
+    interface:
+      - eth0
+    permanent: true
+    state: enabled
+
+firewalld_zone_sources:
+  - zone: public
+    source:
+      - 192.168.22.60/24
+    permanent: true
+    state: enabled
+
+firewalld_service_ports:
+  - service: ssh
+    port: 42749/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+
+firewalld_rich_rules:
+  - zone: public
+    rule:
+      - "rule family=ipv4 source address=192.168.1.1/24 service name=ssh log prefix=emerg level=alert drop"
+    permanent: true
+    immediate: true
+    state: enabled
