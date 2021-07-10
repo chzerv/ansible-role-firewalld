@@ -37,7 +37,6 @@
     state: "{{ item.state }}"
     target: "{{ item.target }}"
     permanent: "{{ item.permanent | default('true') }}"
-    immediate: "{{ item.immediate | default('false') }}"
   loop: "{{ firewalld_zone_target | flatten(levels=1) }}"
 
 - name: Add/remove interfaces to/from a zone.
@@ -45,7 +44,6 @@
     zone: "{{ item.0.zone }}"
     interface: "{{ item.1 }}"
     permanent: "{{ item.0.permanent | default('true') }}"
-    immediate: "{{ item.0.immediate | default('false') }}"
     state: "{{ item.0.state }}"
   when:
     - firewalld_zone_interfaces | length > 0
@@ -56,7 +54,6 @@
     zone: "{{ item.0.zone }}"
     source: "{{ item.1 }}"
     permanent: "{{ item.0.permanent | default('true') }}"
-    immediate: "{{ item.0.immediate | default('false') }}"
     state: "{{ item.0.state }}"
   when:
     - firewalld_zone_sources | length > 0
