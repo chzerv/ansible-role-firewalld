@@ -39,6 +39,16 @@
     state: present
   when: ansible_distribution != "Debian"
 
+- name: Use nftables instead of iptables as the backend on Ubuntu.
+  lineinfile:
+    dest: /etc/firewalld/firewalld.conf
+    regexp: "^FirewallBackend=iptables"
+    line: "FirewallBackend=nftables"
+    state: present
+    backup: true
+    mode: "0644"
+  when: ansible_distribution == "Ubuntu"
+
 - name: Make sure to add the custom SSH port, if one is defined, before anything else.
   firewalld:
     port: "{{ firewalld_ssh_port }}/tcp"
