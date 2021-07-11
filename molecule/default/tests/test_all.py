@@ -7,6 +7,20 @@ from testinfra.utils.ansible_runner import AnsibleRunner
 testinfra_hosts = AnsibleRunner(os.environ["MOLECULE_INVENTORY_FILE"]).get_hosts("all")
 
 
+def is_centos7(host, port, protocol):
+
+    os_release_file = host.file("/etc/os-release")
+    centos = 'ID="centos"'
+    version = 'VERSION_ID="7"'
+
+    if os_release_file.contains(centos) and os_release_file.contains(version):
+        content = '<port protocol="{}" port="{}"/>'.format(protocol, port)
+    else:
+        content = '<port port="{}" protocol="{}"/>'.format(port, protocol)
+
+    return content
+
+
 @pytest.mark.parametrize("pkg", ["firewalld"])
 def test_pkg(host, pkg):
     package = host.package(pkg)
@@ -25,10 +39,9 @@ def test_svc(host, svc):
 def test_custom_ssh_port_is_set(host):
 
     file = host.file("/etc/firewalld/services/ssh.xml")
-    content = '<port port="42749" protocol="tcp"/>'
 
     assert file.exists
-    assert file.contains(content)
+    assert file.contains(is_centos7(host, "42749", "tcp"))
 
 
 @pytest.mark.parametrize("zones", ["custom1", "custom2"])
@@ -51,9 +64,7 @@ def test_ports_in_zone(host, port, protocol):
 
     file = host.file("/etc/firewalld/zones/public.xml")
 
-    content = '<port port="{}" protocol="{}"/>'.format(port, protocol)
-
-    assert file.contains(content)
+    assert file.contains(is_centos7(host, port, protocol))
 
 
 @pytest.mark.parametrize("svc", ["dhcp", "dns"])
