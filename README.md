@@ -1,8 +1,11 @@
 # Ansible Role: Firewalld
 
-Ansible role to install and setup [firewalld](https://firewalld.org) on Ubuntu(>20.04), RedHat/CentOS/Fedora and Archlinux systems.
+Ansible role to install and setup [firewalld](https://firewalld.org) on Ubuntu(>=20.04), RedHat/CentOS/Fedora and Archlinux systems.
 
-> *Disclaimer*: Debian offers a very outdated version of firewalld, so it is *currently* not supported.
+> **Disclaimer**: Debian and Ubuntu < 20.04 provide very outdated versions of `firewalld`, which do not include some of the stuff this role tries to do. Therefore, they are not supported. 
+> CentOS/RHEL 7 also provide quite outdated versions of `firewalld` but the role *mostly* works on them, with some caveats:
+> 1. Rich rule priorities are not available in the versions provided, therefore, you can only set one rich rule.
+> 2. More to come as more stuff are added to the role..
 
 The role provides the ability to:
 
