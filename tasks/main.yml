@@ -58,12 +58,6 @@
     offline: true
   when: firewalld_ssh_port | length > 0
 
-# - name: Ensure the firewalld service is started and enabled at boot.
-#   service:
-#     name: firewalld
-#     state: "{{ firewalld_state | default('started') }}"
-#     enabled: "{{ firewalld_enabled_at_boot | default('false') }}"
-
 - name: Include tasks about zone management.
   include_tasks: zone_management.yml
 
@@ -72,3 +66,9 @@
 
 - name: Include tasks about rich rules.
   include_tasks: rich_rules.yml
+
+- name: Ensure the firewalld service is started and enabled at boot.
+  service:
+    name: firewalld
+    state: "{{ firewalld_state | default('stopped') }}"
+    enabled: "{{ firewalld_enabled_at_boot | default('false') }}"
