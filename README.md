@@ -22,13 +22,22 @@ The role provides the ability to:
 
 **Important:** If you are using a port other than 22 to connect to SSH, make sure to set the variable `firewalld_ssh_port` to the port you are using. This way, the port can be added to the allowed ports *before* the `firewalld` service is started, making sure you will not get locked out of the remote system.
 
+All the tasks are done in *offline* mode, meaning that firewalld does not need to be running. This gives the user the ability to review their settings after running the role, without risking getting locked out in case bad rule is applied.
+
 # Requirements
 
 None.
 
 # Role Variables
 
-List of variables and their default values. Make sure to also check `defaults/main.yml` for more examples.
+List of variables and their default values. Make sure to also check `defaults/main.yml` for some examples.
+
+```yaml
+firewalld_state: stopped
+firewalld_enabled_at_boot: false
+```
+
+> Whether the firewalld service will be started and enabled at boot. By default, firewalld will not be started, giving the user the ability to log in to the server and review their settings.
 
 ```yaml
 firewalld_ssh_port: []
@@ -96,7 +105,7 @@ firewalld_rich_rules: []
 
 > Rich rules to add/remove from a zone. 
 
-Dependencies
+## Dependencies
 ------------
 
 None.
@@ -127,7 +136,7 @@ The `vars/main.yml` file:
 firewalld_ssh_port: "42900"
 
 firewalld_state: started
-firewalld_enabled_at_boot: true
+firewalld_enabled_at_boot: false
 
 firewalld_zone_ports:
   - zone: public
