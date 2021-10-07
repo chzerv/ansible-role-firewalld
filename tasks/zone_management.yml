@@ -28,7 +28,7 @@
     zone: "{{ item.zone }}"
     masquerade: "{{ item.masquerade | default('true') }}"
     state: "{{ item.state }}"
-    permanent: "{{ item.permanent | default('true') }}"
+    permanent: true
     # immediate: "{{ item.immediate | default('false') }}"
     offline: true
   loop: "{{ firewalld_zone_masquerading | flatten(levels=1) }}"
@@ -40,9 +40,20 @@
     zone: "{{ item.zone }}"
     state: "{{ item.state }}"
     target: "{{ item.target }}"
-    permanent: "{{ item.permanent | default('true') }}"
+    permanent: true
     offline: true
   loop: "{{ firewalld_zone_target | flatten(levels=1) }}"
+
+- name: Add/remove sources to/from zone.
+  firewalld:
+    zone: "{{ item.0.zone }}"
+    source: "{{ item.1 }}"
+    permanent: true
+    offline: true
+    state: "{{ item.0.state }}"
+  when: 
+    - firewalld_zone_sources | length > 0
+  loop: "{{ firewalld_zone_sources | subelements('source') }}"
 
 - name: Register assigned zone interfaces.
   command: "firewall-offline-cmd --list-interfaces --zone={{ item.0.zone }}"
@@ -58,18 +69,3 @@
     - firewalld_zone_interfaces | length > 0
     - not item.1 in _firewalld_zone_interfaces | json_query('results[*].stdout')
   loop: "{{ firewalld_zone_interfaces | subelements('interface') }}"
-
-- name: Register assigned zone sources.
-  command: "firewall-offline-cmd --list-sources --zone={{ item.0.zone }}"
-  register: _firewalld_zone_sources
-  changed_when: false
-  when:
-    - firewalld_zone_sources | length > 0
-  loop: "{{ firewalld_zone_sources | subelements('source') }}"
-
-- name: Add/remove sources to/from a zone.
-  command: "firewall-offline-cmd {{ '--add-source' if item.0.state == 'enabled' else '--remove-source' }}={{ item.1 }} --zone={{ item.0.zone }}"
-  when: 
-    - firewalld_zone_sources | length > 0
-    - not item.1 in _firewalld_zone_sources | json_query('results[*].stdout')
-  loop: "{{ firewalld_zone_sources | subelements('source') }}"
