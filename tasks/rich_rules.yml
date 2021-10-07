@@ -3,9 +3,11 @@
   firewalld:
     zone: "{{ item.0.zone | default('public') }}"
     rich_rule: "{{ item.1 | default('') }}"
-    permanent: "{{ item.0.permanent | default('true') }}"
-    immediate: "{{ item.0.immediate | default('true') }}"
+    # permanent: "{{ item.0.permanent | default('true') }}"
+    # immediate: "{{ item.0.immediate | default('true') }}"
+    immediate: false
     state: "{{ item.0.state }}"
+    offline: true
   when:
     - firewalld_rich_rules | length > 0
   loop: "{{ firewalld_rich_rules | subelements('rule') }}"

@@ -49,19 +49,20 @@
     mode: "0644"
   when: ansible_distribution == "Ubuntu"
 
-- name: Make sure to add the custom SSH port, if one is defined, before anything else.
+- name: Make sure to allow the custom SSH port, if one is defined, before anything else.
   firewalld:
     port: "{{ firewalld_ssh_port }}/tcp"
     zone: public
     permanent: true
     state: enabled
+    offline: true
   when: firewalld_ssh_port | length > 0
 
-- name: Ensure the firewalld service is started and enabled at boot.
-  service:
-    name: firewalld
-    state: "{{ firewalld_state | default('started') }}"
-    enabled: "{{ firewalld_enabled_at_boot | default('false') }}"
+# - name: Ensure the firewalld service is started and enabled at boot.
+#   service:
+#     name: firewalld
+#     state: "{{ firewalld_state | default('started') }}"
+#     enabled: "{{ firewalld_enabled_at_boot | default('false') }}"
 
 - name: Include tasks about zone management.
   include_tasks: zone_management.yml
