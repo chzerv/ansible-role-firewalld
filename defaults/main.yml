@@ -1,4 +1,7 @@
 ---
+firewalld_state: stopped
+firewalld_enabled_at_boot: false
+
 # In case you are using a custom SSH port, make sure to set the following variable.
 # This way, the SSH port will be added to firewalld before the service is enabled,
 # making sure you won't get locked out of the system.
@@ -23,8 +26,6 @@ firewalld_zone_ports: []
 #       - 8080/tcp
 #       - 3600/udp
 #     state: enabled # Or disabled, if you want to remove the port
-#     permanent: true  # Optional, defaults to true
-#     immediate: true  # Optional, defaults to false
 
 # List the services you want to add/remove from/to a zone, following the syntax shown below.
 firewalld_zone_services: []
@@ -34,46 +35,37 @@ firewalld_zone_services: []
 #       - dhcpv6-client
 #       - ssh
 #     state: enabled # Or disabled, if you want to remove the service
-#     permanent: true  # Optional, defaults to true
-#     immediate: true  # Optional, defaults to false
 
 # List of zones to enable masquarade in.
 firewalld_zone_masquerading: []
 # firewalld_manage_masquerading:
 #   - zone: dmz
 #     masquerade: true # Optional, defaults to true
-#     permanent: true  # Optional, defaults to true
-#     immediate: true  # Optional, defaults to false
 #     state: enabled   # Or disabled, if you want to disable masquarade.
 
 # Change a zone's default target.
-# Note that 'immediate' MUST NOT be set for this one!!
 firewalld_zone_target: []
 # firewalld_zone_target:
 #   - zone: internal
 #     state: present  # Or absent, if you want to reset the zone's target to its default.
-#     target: ACCEPT
+#     target: ACCEPT  # default, ACCEPT, DROP, or %%REJECT%%
 #     permanent: true # Optional, defaults to true
 
 
 # Interfaces to add/remove to/from a zone.
 firewalld_zone_interfaces: []
-# Note that 'immediate' MUST NOT be set for this one!!
 # firewalld_zone_interfaces:
 #   - zone: public
 #     interface:
 #       - eth0
-#     permanent: true # Optional, defaults to true
 #     state: enabled
 
 # Sources to add/remove to/from a zone.
 firewalld_zone_sources: []
-# Note that 'immediate' MUST NOT be set for this one!!
 # firewalld_zone_sources:
 #   - zone: public
 #     source:
 #       - 192.168.22.60/24
-#     permanent: true # Optional, defaults to true
 #     state: enabled
 
 # Add/remove a new port from/to a service.
@@ -90,6 +82,4 @@ firewalld_rich_rules: []
 #     rule:
 #       - "rule priority=1 family=ipv4 source address=192.168.1.1/24 service name=ssh log prefix=emerg level=alert drop"
 #       - "rule priority=32767 log prefix=UNEXPECTED limit value=5/m"
-#     permanent: true # Optional, defaults to true
-#     immediate: true # Optional, defaults to false
 #     state: enabled # Or disabled, if you want to remove the rule(s).
