@@ -10,18 +10,16 @@
     port: "{{ item.1 }}"
     state: "{{ item.0.state }}"
     offline: true
+    permanent: true
   loop: "{{ firewalld_zone_ports | subelements('port') }}"
   loop_control:
     label: "Port {{ item.1 }} {{ 'added to' if item.0.state == 'enabled' else 'removed from' }} zone {{ item.0.zone }}"
-
-- fail:
 
 - name: Add/remove service to/from zone.
   firewalld:
     zone: "{{ item.0.zone }}"
     service: "{{ item.1 }}"
-    permanent: "{{ item.0.permanent | default('true') }}"
-    immediate: "{{ item.0.immediate | default('false') }}"
+    permanent: true
     state: "{{ item.0.state }}"
   loop: "{{ firewalld_zone_services | subelements('service') }}"
   loop_control:
@@ -39,7 +37,7 @@
 # query will return "yes", otherwise, "no". Then, we use that output to
 # decide when the item has changed.
 - name: Check if port already exists for service.
-  command: "firewall-cmd --service={{ item.service }} --query-port={{ item.port }} --permanent"
+  command: "firewall-offline-cmd --service={{ item.service }} --query-port={{ item.port }}"
   register: service_port_exists
   changed_when: false
   failed_when: false
@@ -51,7 +49,7 @@
   when: item.port is defined
 
 - name: Add/remove port to/from service.
-  command: "firewall-cmd --service={{ item.item.service }} {{ '--add-port' if item.item.state == 'enabled' else '--remove-port' }}='{{ item.item.port }}' --permanent"
+  command: "firewall-offline-cmd --service={{ item.item.service }} {{ '--add-port' if item.item.state == 'enabled' else '--remove-port' }}='{{ item.item.port }}'"
   changed_when: >
     (item.stdout == "no" if item.item.state == "enabled") or
     (item.stdout == "yes" if item.item.state == "disabled")
