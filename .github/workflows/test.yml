@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         config:
-          - image: "ubuntu2010"
           - image: "ubuntu2004"
           - image: "centos8"
           - image: "centos7"
