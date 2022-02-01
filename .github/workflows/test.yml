@@ -14,7 +14,6 @@ jobs:
       matrix:
         config:
           - image: "archlinux"
-          - image: "debian11"
           - image: "ubuntu2004"
           - image: "rockylinux8"
           - image: "almalinux8"
